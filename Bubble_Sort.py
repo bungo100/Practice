@@ -11,5 +11,5 @@ def bubble_sort(numbers: List[int]) -> List[int]:
 
 if __name__ == "__main__":
     import random
-    nums = [random.randint(0, 1000) for i in range(10)]
+    nums = [random.randint(0, 10000) for i in range(10)]
     print(bubble_sort(nums))
