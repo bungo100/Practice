@@ -32,7 +32,7 @@ class Rotor(Plugboard):
         self.rotations = 0
 
     def rotate(self, offset=None):
-        if not offset:
+        if offset is None:
             offset = self.offset
         self.alphabet = self.alphabet[offset:] + self.alphabet[:offset]
         self.rotations += offset
@@ -43,7 +43,7 @@ class Rotor(Plugboard):
         self.alphabet = ALPHABET
 
 
-class Refrector():
+class Reflector():
 
     def __init__(self, map_alphabet):
         self.map = dict(zip(ALPHABET, map_alphabet))
@@ -63,7 +63,12 @@ class EnigmaMachine():
         self.reflector = reflector
 
     def encrypt(self, text):
-        return ''.join([self.go_through(c) for c in list[text]])
+        return ''.join([self.go_through(c) for c in list(text)])
+
+    def decrypt(self, text):
+        for rotor in self.rotors:
+            rotor.reset()
+        return ''.join([self.go_through(c) for c in list(text)])
 
 
     def go_through(self, char):
@@ -85,5 +90,9 @@ class EnigmaMachine():
         index_num = self.plug_board.backward(index_num)
 
         char = ALPHABET[index_num]
+
+        for rotor in reversed(self.rotors):
+            if rotor.rotate() % len(ALPHABET) != 0:
+                break
 
         return char
